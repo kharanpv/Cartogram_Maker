@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "cartogram-maker"
+version = "0.1.0"
+description = "Cartogram Maker: Team Project for EECE3093C"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "cartogram_maker"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+customtkinter = "^5.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
