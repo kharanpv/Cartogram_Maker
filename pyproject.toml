@@ -15,3 +15,6 @@ customtkinter = "^5.2.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+test-canvas = "cartogram_maker.test_canvas:main"
