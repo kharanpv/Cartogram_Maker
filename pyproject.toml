@@ -10,6 +10,7 @@ packages = [{include = "cartogram_maker"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 customtkinter = "^5.2.0"
+pillow = "^10.0.0"
 
 
 [build-system]
