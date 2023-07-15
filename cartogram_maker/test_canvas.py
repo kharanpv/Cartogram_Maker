@@ -14,7 +14,7 @@ def create_click_event(canvas):
                 x1, y1 = point_buffer[-2]
                 x2, y2 = point_buffer[-1]
                 canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
-
+                canvas.create_polygon(point_buffer,fill='green', width=2)
                 point_buffer.clear()
                 return
 
