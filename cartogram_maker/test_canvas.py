@@ -94,6 +94,6 @@ def main():
 
     print("[DEBUG]: created Plus and Minus buttons")
 
-    canvas.bind("<B1-Motion>", lambda event: drag(event, canvas))
+    # canvas.bind("<B1-Motion>", lambda event: drag(event, canvas))
 
     app.mainloop()  # Start the application's main event loop
