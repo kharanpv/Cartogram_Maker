@@ -1,6 +1,6 @@
 import customtkinter as ctk
-import random
 from .canvas_frame import canvas_frame
+from .start_frame import start_frame
 
 class main_app(ctk.CTk):
     def __init__(self):
@@ -25,7 +25,13 @@ class main_app(ctk.CTk):
         print("[DEBUG]: Generate button pressed")
 
     def go_back(self): #placeholder for future Go Back button functionality
+        
+        self.frame.destroy() # Destroy the canvas frame 
+        self.generate_button.destroy()
+        self.exit_button.destroy()
 
+        #load start_frame
+        self.frame = start_frame(self) # Create a frame inside the application window
         print("[DEBUG]: Go Back button pressed")
 
     def drag(event, canvas): # Drag around the canvas when zooming in
