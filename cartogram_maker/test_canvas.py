@@ -27,11 +27,11 @@ class main_app(ctk.CTk):
         self.exit_button = ctk.CTkButton(self, text="Go Back", command=self.go_back, fg_color="red")  # Create the Exit button
         self.exit_button.grid(row=1, column=0, padx=10, pady=10, sticky="sw")  # Position the Exit button in the bottom left corner
 
-        self.plus_button = ctk.CTkButton(self.frame, text="+", command=lambda: self.on_plus_click(self.canvas), width=40, fg_color="lightgray", text_color="black",
+        self.plus_button = ctk.CTkButton(self.frame, text="+", command=self.on_plus_click, width=40, fg_color="lightgray", text_color="black",
                                  font=("Arial", 30), corner_radius=0, hover_color="darkgray")
         self.plus_button.grid(row=0, column=1, padx=(0, 5), pady=(0,50), sticky="se")
 
-        self.minus_button = ctk.CTkButton(self.frame, text="-", command=lambda: self.on_minus_click(self.canvas), width=40, fg_color="lightgray", text_color="black",
+        self.minus_button = ctk.CTkButton(self.frame, text="-", command=self.on_minus_click, width=40, fg_color="lightgray", text_color="black",
                                  font=("Arial", 30), corner_radius=0, hover_color="darkgray")
         self.minus_button.grid(row=0, column=1, padx=(0,5), pady=(0,5), sticky="se")
 
@@ -71,11 +71,11 @@ class main_app(ctk.CTk):
         self.canvas.scale("all", 0, 0, 0.9, 0.9)
         print("[DEBUG]: Minus button pressed")
 
-    def generate(): #placeholder for future Generate button functionality
+    def generate(self): #placeholder for future Generate button functionality
         
         print("[DEBUG]: Generate button pressed")
 
-    def go_back(): #placeholder for future Go Back button functionality
+    def go_back(self): #placeholder for future Go Back button functionality
 
         print("[DEBUG]: Go Back button pressed")
 
