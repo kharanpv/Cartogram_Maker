@@ -113,6 +113,7 @@ class start_frame(ctk.CTkFrame):
                 fg_color="transparent",
                 text_color="black",
                 width=30,
+                hover_color="#EBEBEB"
             )
             view_button.grid(row=0, column=0, padx=(0, 5), pady=(5, 0), sticky="nsw")
 
@@ -124,6 +125,7 @@ class start_frame(ctk.CTkFrame):
                 fg_color="transparent",
                 text_color="black",
                 width=30,
+                hover_color="#EBEBEB"
             )
             edit_button.grid(row=0, column=1, padx=5, pady=(5, 0), sticky="nsw")
 
@@ -135,6 +137,7 @@ class start_frame(ctk.CTkFrame):
                 fg_color="transparent",
                 text_color="black",
                 width=60,
+                hover_color="#EBEBEB"
             )
             download_button.grid(
                 row=0, column=2, padx=(5, 0), pady=(5, 0), sticky="nsw"
