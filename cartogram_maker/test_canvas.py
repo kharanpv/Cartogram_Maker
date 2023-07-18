@@ -2,7 +2,7 @@ import customtkinter as ctk
 import random
 
 def random_color():
-    colors = ['#CB48B7','#2E2D4D','#337357','#6D9F71','E4E3D3']
+    colors = ['#E40303','#FF8C00','#FFED00','#008026','#24408E', '#732982']
     return random.choice(colors)
 
 class main_app(ctk.CTk):
@@ -13,7 +13,7 @@ class main_app(ctk.CTk):
         self.geometry('800x600')
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=0)
-        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)   
 
         self.frame = ctk.CTkFrame(self, fg_color="white")  # Create a frame inside the application window
         self.frame.grid_columnconfigure(0, weight=1)
