@@ -1,99 +1,91 @@
 import customtkinter as ctk
 
-# Function to handle the click event
-def create_click_event(canvas):
-    point_buffer = [] # Buffer to store a pair of points
 
-    def click_event(e):
-        x = e.x
-        y = e.y
+class main_app(ctk.CTk):
+    def __init__(self):
+        super().__init__() # Call the parent class constructor
 
-        for i in range(0, len(point_buffer) - 1): # Check if the point is close to any of the points in the buffer
-            if abs(point_buffer[i][0] - x) < 10 and abs(point_buffer[i][1] - y) < 10:
-                point_buffer.append(point_buffer[i])
-                x1, y1 = point_buffer[-2]
-                x2, y2 = point_buffer[-1]
-                canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
-                canvas.create_polygon(point_buffer,fill='green', width=2)
-                point_buffer.clear()
-                return
+        self.title('Cartogram Maker')
+        self.geometry('800x600')
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=0)
+        self.grid_rowconfigure(0, weight=1)
 
-        point_buffer.append((x, y))
-        canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+        self.frame = ctk.CTkFrame(self, fg_color="white")  # Create a frame inside the application window
+        self.frame.grid_columnconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(1, weight=0)
+        self.frame.grid_rowconfigure(0, weight=1)  
+        self.frame.grid(row=0, column=0, padx=40, pady=(20,0), sticky="nsew") 
 
-        if len(point_buffer) >= 2: # If the buffer has atleast 2 points, draw a line
-            x1, y1 = point_buffer[-2]
-            x2, y2 = point_buffer[-1]
-            canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
+        self.canvas = ctk.CTkCanvas(self.frame, width=800, height=800, background="white", highlightthickness=0)  # Create a canvas inside the frame
+        self.canvas.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")  # Add padding for the canvas
+        self.canvas.bind("<Button-1>", self.create_click_event)
 
-    return click_event
+        self.generate_button = ctk.CTkButton(self, text="Generate", command=self.generate)  # Create the Generate button
+        self.generate_button.grid(row=1, column=0, padx=10, pady=10, sticky="se")  # Position the button in the bottom right corner
 
-def on_plus_click(canvas): #placeholder for future Plus button functionality
-    canvas.scale("all", 0, 0, 1.1, 1.1)     # Scale by 10%
-    print("[DEBUG]: Plus button pressed")
+        self.exit_button = ctk.CTkButton(self, text="Go Back", command=self.go_back, fg_color="red")  # Create the Exit button
+        self.exit_button.grid(row=1, column=0, padx=10, pady=10, sticky="sw")  # Position the Exit button in the bottom left corner
 
-def on_minus_click(canvas): #placeholder for future Minus button functionality
-    canvas.scale("all", 0, 0, 0.9, 0.9)
-    print("[DEBUG]: Minus button pressed")
+        self.plus_button = ctk.CTkButton(self.frame, text="+", command=lambda: self.on_plus_click(self.canvas), width=40, fg_color="lightgray", text_color="black",
+                                 font=("Arial", 30), corner_radius=0, hover_color="darkgray")
+        self.plus_button.grid(row=0, column=1, padx=(0, 5), pady=(0,50), sticky="se")
 
-def generate(): #placeholder for future Generate button functionality
-    
-    print("[DEBUG]: Generate button pressed")
+        self.minus_button = ctk.CTkButton(self.frame, text="-", command=lambda: self.on_minus_click(self.canvas), width=40, fg_color="lightgray", text_color="black",
+                                 font=("Arial", 30), corner_radius=0, hover_color="darkgray")
+        self.minus_button.grid(row=0, column=1, padx=(0,5), pady=(0,5), sticky="se")
 
-def go_back(): #placeholder for future Go Back button functionality
+        self.point_buffer = [] # Buffer to store a pair of points
 
-    print("[DEBUG]: Go Back button pressed")
+    # Function to handle the click event
+    def create_click_event(self, event):
+        self.click_event(event)
 
-def drag(event, canvas): # Drag around the canvas when zooming in
-    # canvas.scan_dragto(event.x, event.y, gain=1)
-    print("[DEBUG]: Dragging the canvas")
+    def click_event(self, event):
+            x = event.x
+            y = event.y
+
+            for i in range(0, len(self.point_buffer) - 1): # Check if the point is close to any of the points in the buffer
+                if abs(self.point_buffer[i][0] - x) < 10 and abs(self.point_buffer[i][1] - y) < 10:
+                    self.point_buffer.append(self.point_buffer[i])
+                    x1, y1 = self.point_buffer[-2]
+                    x2, y2 = self.point_buffer[-1]
+                    self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
+                    self.canvas.create_polygon(self.point_buffer,fill='green', width=2)
+                    self.point_buffer.clear()
+                    return
+
+            self.point_buffer.append((x, y))
+            self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+
+            if len(self.point_buffer) >= 2: # If the buffer has atleast 2 points, draw a line
+                x1, y1 = self.point_buffer[-2]
+                x2, y2 = self.point_buffer[-1]
+                self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
+
+    def on_plus_click(self): #placeholder for future Plus button functionality
+        self.canvas.scale("all", 0, 0, 1.1, 1.1)     # Scale by 10%
+        print("[DEBUG]: Plus button pressed")
+
+    def on_minus_click(self): #placeholder for future Minus button functionality
+        self.canvas.scale("all", 0, 0, 0.9, 0.9)
+        print("[DEBUG]: Minus button pressed")
+
+    def generate(): #placeholder for future Generate button functionality
+        
+        print("[DEBUG]: Generate button pressed")
+
+    def go_back(): #placeholder for future Go Back button functionality
+
+        print("[DEBUG]: Go Back button pressed")
+
+    def drag(event, canvas): # Drag around the canvas when zooming in
+        # canvas.scan_dragto(event.x, event.y, gain=1)
+        print("[DEBUG]: Dragging the canvas")
 
 
 def main():
-    app = ctk.CTk()  # Create the application window
-    app.title("Cartogram Maker") # Add title to this app
-    app.geometry("800x600")  # Set the window size
-    app.grid_columnconfigure(0, weight=1)
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_rowconfigure(1, weight=0)
 
-    print("[DEBUG]: created app")
+    app = main_app()
+    app.mainloop()
 
-    frame = ctk.CTkFrame(app, fg_color="white")  # Create a frame inside the application window
-    frame.grid_columnconfigure(0, weight=1)
-    frame.grid_columnconfigure(1, weight=0)
-    frame.grid_rowconfigure(0, weight=1)  
-    frame.grid(row=0, column=0, padx=40, pady=(20,0), sticky="nsew") 
-
-    print("[DEBUG]: created frame")
-
-    canvas = ctk.CTkCanvas(frame, width=800, height=800, background="white", highlightthickness=0)  # Create a canvas inside the frame
-    canvas.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")  # Add padding for the canvas
-
-    canvas.bind("<Button-1>", create_click_event(canvas=canvas))
-
-    print("[DEBUG]: created canvas and bound on click event")
-
-    button = ctk.CTkButton(app, text="Generate", command=generate)  # Create the Generate button
-    button.grid(row=1, column=0, padx=10, pady=10, sticky="se")  # Position the button in the bottom right corner
-
-    print("[DEBUG]: created Generate button")
-
-    exit_button = ctk.CTkButton(app, text="Go Back", command=go_back, fg_color="red")  # Create the Exit button
-    exit_button.grid(row=1, column=0, padx=10, pady=10, sticky="sw")  # Position the Exit button in the bottom left corner
-
-    print("[DEBUG]: created Go Back button")
-
-    plus_button = ctk.CTkButton(frame, text="+", command=lambda: on_plus_click(canvas), width=40, fg_color="lightgray", text_color="black",
-                                 font=("Arial", 30), corner_radius=0, hover_color="darkgray")
-    plus_button.grid(row=0, column=1, padx=(0, 5), pady=(0,50), sticky="se")
-
-    minus_button = ctk.CTkButton(frame, text="-", command=lambda: on_minus_click(canvas), width=40, fg_color="lightgray", text_color="black",
-                                 font=("Arial", 30), corner_radius=0, hover_color="darkgray")
-    minus_button.grid(row=0, column=1, padx=(0,5), pady=(0,5), sticky="se")
-
-    print("[DEBUG]: created Plus and Minus buttons")
-
-    # canvas.bind("<B1-Motion>", lambda event: drag(event, canvas))
-
-    app.mainloop()  # Start the application's main event loop
