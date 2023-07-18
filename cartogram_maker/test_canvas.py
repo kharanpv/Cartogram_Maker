@@ -1,5 +1,9 @@
 import customtkinter as ctk
+import random
 
+def random_color():
+    colors = ['#CB48B7','#2E2D4D','#337357','#6D9F71','E4E3D3']
+    return random.choice(colors)
 
 class main_app(ctk.CTk):
     def __init__(self):
@@ -51,7 +55,7 @@ class main_app(ctk.CTk):
                     x1, y1 = self.point_buffer[-2]
                     x2, y2 = self.point_buffer[-1]
                     self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
-                    self.canvas.create_polygon(self.point_buffer,fill='green', width=2)
+                    self.canvas.create_polygon(self.point_buffer,fill=random_color(), width=2)
                     self.point_buffer.clear()
                     return
 
