@@ -1,46 +1,29 @@
 import customtkinter as ctk
-from .canvas_frame import canvas_frame
-from .start_frame import start_frame
 
 class main_app(ctk.CTk):
     def __init__(self):
-        super().__init__() # Call the parent class constructor
-
+        from .start_frame import start_frame
+        super().__init__()
+        
         self.title('Cartogram Maker')
         self.geometry('800x600')
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=0)
-        self.grid_rowconfigure(0, weight=1)   
+        self.grid_rowconfigure(0, weight=1)
 
-        self.frame = canvas_frame(self) # Create a frame inside the application window
+        # Create a frame inside the application window
+        self.main_frame = ctk.CTkFrame(self, fg_color="#EBEBEB")
+        self.main_frame.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame.grid_rowconfigure(0, weight=1)
 
-        self.generate_button = ctk.CTkButton(self, text="Generate", command=self.generate)  # Create the Generate button
-        self.generate_button.grid(row=1, column=0, padx=10, pady=10, sticky="se")  # Position the button in the bottom right corner
+        self.main_frame = start_frame(self) # Change the frame to start_frame
 
-        self.exit_button = ctk.CTkButton(self, text="Go Back", command=self.go_back, fg_color="red")  # Create the Exit button
-        self.exit_button.grid(row=1, column=0, padx=10, pady=10, sticky="sw")  # Position the Exit button in the bottom left corner
+    def change_frame(self, frame):
+        self.main_frame.destroy()
+        self.main_frame = frame(self)
 
-    def generate(self): #placeholder for future Generate button functionality
-        
-        print("[DEBUG]: Generate button pressed")
-
-    def go_back(self): #placeholder for future Go Back button functionality
-        
-        self.frame.destroy() # Destroy the canvas frame 
-        self.generate_button.destroy()
-        self.exit_button.destroy()
-
-        #load start_frame
-        self.frame = start_frame(self) # Create a frame inside the application window
-        print("[DEBUG]: Go Back button pressed")
-
-    def drag(event, canvas): # Drag around the canvas when zooming in
-        # canvas.scan_dragto(event.x, event.y, gain=1)
-        print("[DEBUG]: Dragging the canvas")
-
+        print("[DEBUG]: Frame successfully changed")
 
 def main():
-
     app = main_app()
     app.mainloop()
-

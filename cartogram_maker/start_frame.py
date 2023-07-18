@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import os
 from datetime import datetime
-
+from .cartogram_dialogbox import cartogram_dialogbox
 
 class start_frame(ctk.CTkFrame):
     def __init__(self, master):
@@ -54,6 +54,8 @@ class start_frame(ctk.CTkFrame):
         # the project list is updated on demand
         self.bind("<Configure>", self.display_project_list)
         self.display_project_list()
+
+        self.cartogram_dialogbox = None # cartogram_dialogbox instance
 
     def get_project_list(self, folder_path):
         project_list = []
@@ -143,9 +145,16 @@ class start_frame(ctk.CTkFrame):
                 row=0, column=2, padx=(5, 0), pady=(5, 0), sticky="nsw"
             )
 
-            row_num += 1
+            row_num += 1 # increment the row number
 
     def on_create_click(self):
+        if self.cartogram_dialogbox is None or not self.toplevel_window.winfo_exists(): # if cartogram_dialogbox does not exist create a new instance
+            self.cartogram_dialogbox = cartogram_dialogbox(self)
+            self.cartogram_dialogbox.lift() # lift the cartogram_dialogbox to the top
+        else:
+            self.cartogram_dialogbox.focus() # else focus on the existing instance
+            self.cartogram_dialogbox.lift()
+
         print("[DEBUG]: Create button pressed")
 
     def on_view_click(self, project_name):
