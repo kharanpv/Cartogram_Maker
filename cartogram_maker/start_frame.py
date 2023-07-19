@@ -148,7 +148,7 @@ class start_frame(ctk.CTkFrame):
             row_num += 1 # increment the row number
 
     def on_create_click(self):
-        if self.cartogram_dialogbox is None or not self.toplevel_window.winfo_exists(): # if cartogram_dialogbox does not exist create a new instance
+        if self.cartogram_dialogbox is None or not self.cartogram_dialogbox.winfo_exists(): # if cartogram_dialogbox does not exist create a new instance
             self.cartogram_dialogbox = cartogram_dialogbox(self)
             self.cartogram_dialogbox.lift() # lift the cartogram_dialogbox to the top
         else:
