@@ -1,5 +1,7 @@
 import customtkinter as ctk
 from .creation_tool import creation_tool
+import os
+import shutil
 
 class cartogram_dialogbox(ctk.CTkToplevel):
     def __init__(self, master):
@@ -31,7 +33,21 @@ class cartogram_dialogbox(ctk.CTkToplevel):
         self.create_button.grid(row=3, column=0, padx=10, pady=5, sticky="nsw")
 
     def on_browse_click(self):
+
         print("[DEBUG]: Browse button pressed")
+
+        # open file explorer for json files
+        file_path = ctk.filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+
+        if file_path:
+            #copy file to project folder
+            projects_folder = os.path.join(os.getcwd(), "projects")
+            print(projects_folder)
+            shutil.copy(file_path, projects_folder)
+
+        # destroy the dialog box
+        self.destroy()
+        self.master.display_project_list()
 
     def on_create_click(self):
         self.destroy()
