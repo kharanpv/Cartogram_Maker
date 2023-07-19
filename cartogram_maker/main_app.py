@@ -1,12 +1,14 @@
 import customtkinter as ctk
 
+
 class main_app(ctk.CTk):
     def __init__(self):
         from .start_frame import start_frame
+
         super().__init__()
-        
-        self.title('Cartogram Maker')
-        self.geometry('800x600')
+
+        self.title("Cartogram Maker")
+        self.geometry("800x600")
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 

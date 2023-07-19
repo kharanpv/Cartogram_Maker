@@ -35,6 +35,6 @@ class cartogram_dialogbox(ctk.CTkToplevel):
 
     def on_create_click(self):
         self.destroy()
-        self.master.master.change_frame(creation_tool)  
+        self.master.master.change_frame(creation_tool)
 
         print("[DEBUG]: Create button pressed")
