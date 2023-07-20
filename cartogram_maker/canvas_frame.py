@@ -15,25 +15,47 @@ class canvas_frame(ctk.CTkFrame):
         self.grid(row=0, column=0, padx=40, pady=(20, 0), sticky="nsew")
 
         self.undo_button = ctk.CTkButton(self, text="⤺", command=self.on_undo_click, width=40, fg_color="lightgray", text_color="black",
-                                    font=("Arial", 30), corner_radius=0, hover_color="darkgray")
+                                    font=("Arial", 30), corner_radius=2, hover_color="darkgray")
         self.undo_button.grid(row=0, column=1, padx=(0, 5), pady=(5,0), sticky="ne")
 
         self.plus_button = ctk.CTkButton(self, text="+", command=self.on_plus_click, width=40, fg_color="lightgray", text_color="black",
-                                 font=("Arial", 30), corner_radius=0, hover_color="darkgray")
+                                 font=("Arial", 30), corner_radius=2, hover_color="darkgray")
         self.plus_button.grid(row=0, column=1, padx=(0, 5), pady=(0, 50), sticky="se")
 
         self.minus_button = ctk.CTkButton(self, text="-", command=self.on_minus_click, width=40, fg_color="lightgray", text_color="black",
-                                 font=("Arial", 30), corner_radius=0, hover_color="darkgray")
+                                 font=("Arial", 30), corner_radius=2, hover_color="darkgray")
         self.minus_button.grid(row=0, column=1, padx=(0, 5), pady=(0, 5), sticky="se")
 
         self.point_buffer = []  # Buffer to store a pair of points
+        self.polygon_list = []  # List to store all the polygons
 
         self.canvas = ctk.CTkCanvas(self, width=800, height=800, background="white", highlightthickness=0)  # Create a canvas inside the frame
         self.canvas.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")  # Add padding for the canvas
         self.canvas.bind("<Button-1>", self.create_click_event)
 
     def on_undo_click(self):
+
         # Handle the undo button click event
+        if len(self.point_buffer) > 1:
+            x1, y1 = self.point_buffer[-2]
+            x2, y2 = self.point_buffer[-1]
+            canvas_ids = self.canvas.find_overlapping(x1, y1, x2, y2)
+            self.canvas.delete(canvas_ids[-2]) #delete the last point
+            self.canvas.delete(canvas_ids[-1]) #delete the last line
+            self.point_buffer.pop() #remove the last point from the buffer
+            
+        elif len(self.point_buffer) == 1:
+            x, y = self.point_buffer[-1]
+            canvas_ids = self.canvas.find_overlapping(x-2, y-2, x+2, y+2)
+            self.canvas.delete(canvas_ids[-1]) #delete the last point
+            self.point_buffer.pop() #remove the last point from the buffer        
+
+        #TODO: THIS SEGMENT OF THE UNDO CLICK IS NOT WORKING AS INTENDED
+        elif len(self.polygon_list) > 0: # If there are any polygons, delete the last one
+            self.canvas.delete(self.polygon_list[-1][0])
+            self.point_buffer = self.polygon_list[-1][1]
+            self.polygon_list.pop()
+            self.on_undo_click() # Call the function again to delete the last point
 
         print("[DEBUG]: Undo button pressed")
     
@@ -61,12 +83,14 @@ class canvas_frame(ctk.CTkFrame):
                 x1, y1 = self.point_buffer[-2]
                 x2, y2 = self.point_buffer[-1]
                 self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
-                self.canvas.create_polygon(self.point_buffer,fill=random_color(), width=2)
+                self.polygon_list.append([self.canvas.create_polygon(self.point_buffer,fill=random_color(), width=2), 
+                                          self.point_buffer.copy()]) # Add the polygon to the list
                 self.point_buffer.clear()
                 return
 
         self.point_buffer.append((x, y))
-        self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+        oval_id = self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+        print("[DEBUG]: ", oval_id)
 
         if len(self.point_buffer) >= 2: # If the buffer has atleast 2 points, draw a line
             x1, y1 = self.point_buffer[-2]
