@@ -4,6 +4,7 @@ import customtkinter as ctk
 class main_app(ctk.CTk):
     def __init__(self):
         from .start_frame import start_frame
+        from .edit_data import edit_data
 
         super().__init__()
 

@@ -11,7 +11,7 @@ packages = [{include = "cartogram_maker"}]
 python = "^3.11"
 customtkinter = "^5.2.0"
 pillow = "^10.0.0"
-
+ctktable = "^0.7"
 
 [build-system]
 requires = ["poetry-core"]

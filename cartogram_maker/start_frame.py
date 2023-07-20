@@ -2,6 +2,7 @@ import customtkinter as ctk
 import os
 from datetime import datetime
 from .cartogram_dialogbox import cartogram_dialogbox
+from .edit_data import edit_data
 
 class start_frame(ctk.CTkFrame):
     def __init__(self, master):
@@ -148,7 +149,7 @@ class start_frame(ctk.CTkFrame):
             row_num += 1 # increment the row number
 
     def on_create_click(self):
-        if self.cartogram_dialogbox is None or not self.toplevel_window.winfo_exists(): # if cartogram_dialogbox does not exist create a new instance
+        if self.cartogram_dialogbox is None or not self.cartogram_dialogbox.winfo_exists(): # if cartogram_dialogbox does not exist create a new instance
             self.cartogram_dialogbox = cartogram_dialogbox(self)
             self.cartogram_dialogbox.lift() # lift the cartogram_dialogbox to the top
         else:
@@ -161,6 +162,8 @@ class start_frame(ctk.CTkFrame):
         print("[DEBUG]: View button pressed on project: " + project_name)
 
     def on_edit_click(self, project_name):
+        edit_data_partial = lambda new_master : edit_data(master=new_master, project_name=project_name)
+        self.master.change_frame(edit_data_partial)
         print("[DEBUG]: Edit button pressed on project: " + project_name)
 
     def on_download_click(self, project_name):
