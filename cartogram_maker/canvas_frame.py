@@ -14,6 +14,10 @@ class canvas_frame(ctk.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.grid(row=0, column=0, padx=40, pady=(20, 0), sticky="nsew")
 
+        self.undo_button = ctk.CTkButton(self, text="⤺", command=self.on_undo_click, width=40, fg_color="lightgray", text_color="black",
+                                    font=("Arial", 30), corner_radius=0, hover_color="darkgray")
+        self.undo_button.grid(row=0, column=1, padx=(0, 5), pady=(5,0), sticky="ne")
+
         self.plus_button = ctk.CTkButton(self, text="+", command=self.on_plus_click, width=40, fg_color="lightgray", text_color="black",
                                  font=("Arial", 30), corner_radius=0, hover_color="darkgray")
         self.plus_button.grid(row=0, column=1, padx=(0, 5), pady=(0, 50), sticky="se")
@@ -28,6 +32,11 @@ class canvas_frame(ctk.CTkFrame):
         self.canvas.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")  # Add padding for the canvas
         self.canvas.bind("<Button-1>", self.create_click_event)
 
+    def on_undo_click(self):
+        # Handle the undo button click event
+
+        print("[DEBUG]: Undo button pressed")
+    
     def on_plus_click(self):
         # Handle the plus button click event
         self.canvas.scale("all", 0, 0, 1.1, 1.1)  # Scale by 10%
