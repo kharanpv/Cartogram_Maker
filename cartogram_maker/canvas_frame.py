@@ -50,12 +50,18 @@ class canvas_frame(ctk.CTkFrame):
             self.canvas.delete(canvas_ids[-1]) #delete the last point
             self.point_buffer.pop() #remove the last point from the buffer        
 
-        #TODO: THIS SEGMENT OF THE UNDO CLICK IS NOT WORKING AS INTENDED
         elif len(self.polygon_list) > 0: # If there are any polygons, delete the last one
             self.canvas.delete(self.polygon_list[-1][0])
             self.point_buffer = self.polygon_list[-1][1]
             self.polygon_list.pop()
-            self.on_undo_click() # Call the function again to delete the last point
+            
+            # delete the last point and line
+            x1, y1 = self.point_buffer[-2]
+            x2, y2 = self.point_buffer[-1]
+            canvas_ids = self.canvas.find_overlapping(x1, y1, x2, y2)
+            # self.canvas.delete(canvas_ids[-2]) #delete the last point
+            self.canvas.delete(canvas_ids[-1]) #delete the last line
+            self.point_buffer.pop() #remove the last point from the buffer
 
         print("[DEBUG]: Undo button pressed")
     
