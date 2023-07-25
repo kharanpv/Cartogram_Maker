@@ -68,6 +68,9 @@ class CanvasFrame(ctk.CTkFrame):
         )  # Add padding for the canvas
         self.canvas.bind("<Button-1>", self.create_click_event)
 
+    def get_list_of_polygons(self):
+        return [polygon for polygon in self.polygon_list]
+
     def on_undo_click(self):
         # Handle the undo button click event
         if len(self.point_buffer) > 1:
@@ -119,31 +122,29 @@ class CanvasFrame(ctk.CTkFrame):
         x = event.x
         y = event.y
 
-        for i in range(
-            0, len(self.point_buffer) - 1
-        ):  # Check if the point is close to any of the points in the buffer
+        # Check if the point is close to any of the points in the buffer
+        for i in range(0, len(self.point_buffer) - 1):
             if (
                 abs(self.point_buffer[i][0] - x) < 10
                 and abs(self.point_buffer[i][1] - y) < 10
             ):
-                self.point_buffer.append(self.point_buffer[i])
                 x1, y1 = self.point_buffer[-2]
                 x2, y2 = self.point_buffer[-1]
                 self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
                 self.polygon_list.append(
-                    [
+                    (
                         self.canvas.create_polygon(
                             self.point_buffer, fill=random_color(), width=2
                         ),
                         self.point_buffer.copy(),
-                    ]
+                    )
                 )  # Add the polygon to the list
                 self.point_buffer.clear()
                 return
 
         self.point_buffer.append((x, y))
         oval_id = self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
-        print("[DEBUG]: ", oval_id)
+        print(f"[DEBUG]: {oval_id=}")
 
         if (
             len(self.point_buffer) >= 2
