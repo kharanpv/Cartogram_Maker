@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import random
+from .point import Point
 
 
 def random_color():
@@ -59,6 +60,7 @@ class CanvasFrame(ctk.CTkFrame):
 
         self.point_buffer = []  # Buffer to store a pair of points
         self.polygon_list = []  # List to store all the polygons
+        self.colors       = {}
 
         self.canvas = ctk.CTkCanvas(
             self, width=800, height=800, background="white", highlightthickness=0
@@ -69,7 +71,7 @@ class CanvasFrame(ctk.CTkFrame):
         self.canvas.bind("<Button-1>", self.create_click_event)
 
     def get_list_of_polygons(self):
-        return [polygon for polygon in self.polygon_list]
+        return {id : { 'color' : self.colors[id], 'vertices' : polygon } for id, polygon in self.polygon_list}
 
     def on_undo_click(self):
         # Handle the undo button click event
@@ -128,21 +130,24 @@ class CanvasFrame(ctk.CTkFrame):
                 abs(self.point_buffer[i][0] - x) < 10
                 and abs(self.point_buffer[i][1] - y) < 10
             ):
+                dialog = ctk.CTkInputDialog(text="Enter a color value", title="Fill in Color")
+                self.point_buffer.append(self.point_buffer[i])
                 x1, y1 = self.point_buffer[-2]
                 x2, y2 = self.point_buffer[-1]
                 self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
                 self.polygon_list.append(
                     (
-                        self.canvas.create_polygon(
-                            self.point_buffer, fill=random_color(), width=2
+                        id:=self.canvas.create_polygon(
+                            self.point_buffer, fill=(color := f"#{dialog.get_input()}"), width=2
                         ),
-                        self.point_buffer.copy(),
+                        self.point_buffer[:],
                     )
                 )  # Add the polygon to the list
+                self.colors[id] = color
                 self.point_buffer.clear()
                 return
 
-        self.point_buffer.append((x, y))
+        self.point_buffer.append(Point(x, y))
         oval_id = self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
         print(f"[DEBUG]: {oval_id=}")
 

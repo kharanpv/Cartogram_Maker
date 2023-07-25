@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import json
 
 
 class CreationTool(ctk.CTkFrame):
@@ -54,6 +55,7 @@ class CreationTool(ctk.CTkFrame):
     def save(self):  # placeholder for future Save button functionality
         print("[DEBUG]: Save button pressed")
         print(f"[DEBUG]: {self.canvas_frame.get_list_of_polygons()}")
+        print(f"[DEBUG]: {json.dumps(self.canvas_frame.get_list_of_polygons())}")
 
     def go_back(self):
         from .start_frame import StartFrame
