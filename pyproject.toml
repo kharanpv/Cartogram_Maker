@@ -13,6 +13,9 @@ customtkinter = "^5.2.0"
 pillow = "^10.0.0"
 ctktable = "^0.7"
 
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -1,10 +1,11 @@
 import customtkinter as ctk
 import os
 from datetime import datetime
-from .cartogram_dialogbox import cartogram_dialogbox
-from .edit_data import edit_data
+from .cartogram_dialogbox import CartogramDialogBox
+from .edit_data import EditData
 
-class start_frame(ctk.CTkFrame):
+
+class StartFrame(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(
             master, fg_color="#EBEBEB"
@@ -56,7 +57,7 @@ class start_frame(ctk.CTkFrame):
         self.bind("<Configure>", self.display_project_list)
         self.display_project_list()
 
-        self.cartogram_dialogbox = None # cartogram_dialogbox instance
+        self.cartogram_dialogbox = None  # cartogram_dialogbox instance
 
     def get_project_list(self, folder_path):
         project_list = []
@@ -116,7 +117,7 @@ class start_frame(ctk.CTkFrame):
                 fg_color="transparent",
                 text_color="black",
                 width=30,
-                hover_color="#EBEBEB"
+                hover_color="#EBEBEB",
             )
             view_button.grid(row=0, column=0, padx=(0, 5), pady=(5, 0), sticky="nsw")
 
@@ -128,7 +129,7 @@ class start_frame(ctk.CTkFrame):
                 fg_color="transparent",
                 text_color="black",
                 width=30,
-                hover_color="#EBEBEB"
+                hover_color="#EBEBEB",
             )
             edit_button.grid(row=0, column=1, padx=5, pady=(5, 0), sticky="nsw")
 
@@ -140,20 +141,23 @@ class start_frame(ctk.CTkFrame):
                 fg_color="transparent",
                 text_color="black",
                 width=60,
-                hover_color="#EBEBEB"
+                hover_color="#EBEBEB",
             )
             download_button.grid(
                 row=0, column=2, padx=(5, 0), pady=(5, 0), sticky="nsw"
             )
 
-            row_num += 1 # increment the row number
+            row_num += 1  # increment the row number
 
     def on_create_click(self):
-        if self.cartogram_dialogbox is None or not self.cartogram_dialogbox.winfo_exists(): # if cartogram_dialogbox does not exist create a new instance
-            self.cartogram_dialogbox = cartogram_dialogbox(self)
-            self.cartogram_dialogbox.lift() # lift the cartogram_dialogbox to the top
+        if (
+            self.cartogram_dialogbox is None
+            or not self.cartogram_dialogbox.winfo_exists()
+        ):  # if cartogram_dialogbox does not exist create a new instance
+            self.cartogram_dialogbox = CartogramDialogBox(self)
+            self.cartogram_dialogbox.lift()  # lift the cartogram_dialogbox to the top
         else:
-            self.cartogram_dialogbox.focus() # else focus on the existing instance
+            self.cartogram_dialogbox.focus()  # else focus on the existing instance
             self.cartogram_dialogbox.lift()
 
         print("[DEBUG]: Create button pressed")
@@ -162,7 +166,9 @@ class start_frame(ctk.CTkFrame):
         print("[DEBUG]: View button pressed on project: " + project_name)
 
     def on_edit_click(self, project_name):
-        edit_data_partial = lambda new_master : edit_data(master=new_master, project_name=project_name)
+        edit_data_partial = lambda new_master: EditData(
+            master=new_master, project_name=project_name
+        )
         self.master.change_frame(edit_data_partial)
         print("[DEBUG]: Edit button pressed on project: " + project_name)
 

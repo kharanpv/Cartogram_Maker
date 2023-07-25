@@ -1,10 +1,9 @@
 import customtkinter as ctk
 
 
-class main_app(ctk.CTk):
+class MainApp(ctk.CTk):
     def __init__(self):
-        from .start_frame import start_frame
-        from .edit_data import edit_data
+        from .start_frame import StartFrame
 
         super().__init__()
 
@@ -19,7 +18,7 @@ class main_app(ctk.CTk):
         self.main_frame.grid_columnconfigure(0, weight=1)
         self.main_frame.grid_rowconfigure(0, weight=1)
 
-        self.main_frame = start_frame(self) # Change the frame to start_frame
+        self.main_frame = StartFrame(self)  # Change the frame to start_frame
 
     def change_frame(self, frame):
         self.main_frame.destroy()
@@ -27,6 +26,7 @@ class main_app(ctk.CTk):
 
         print("[DEBUG]: Frame successfully changed")
 
+
 def main():
-    app = main_app()
+    app = MainApp()
     app.mainloop()
