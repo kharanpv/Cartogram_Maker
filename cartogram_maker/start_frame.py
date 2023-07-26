@@ -109,11 +109,13 @@ class StartFrame(ctk.CTkFrame):
                 row=row_num, column=3, padx=(5, 0), pady=(5, 0), sticky="nsw"
             )
 
+            curr_project = project[0]
+
             # view button
             view_button = ctk.CTkButton(
                 button_frame,
                 text="View",
-                command=lambda: self.on_view_click(project[0]),
+                command=self.create_on_view(curr_project),
                 fg_color="transparent",
                 text_color="black",
                 width=30,
@@ -125,7 +127,7 @@ class StartFrame(ctk.CTkFrame):
             edit_button = ctk.CTkButton(
                 button_frame,
                 text="Edit",
-                command=lambda: self.on_edit_click(project[0]),
+                command=self.create_on_edit(curr_project),
                 fg_color="transparent",
                 text_color="black",
                 width=30,
@@ -137,7 +139,7 @@ class StartFrame(ctk.CTkFrame):
             download_button = ctk.CTkButton(
                 button_frame,
                 text="Download",
-                command=lambda: self.on_download_click(project[0]),
+                command=self.create_on_download(curr_project),
                 fg_color="transparent",
                 text_color="black",
                 width=60,
@@ -162,8 +164,32 @@ class StartFrame(ctk.CTkFrame):
 
         print("[DEBUG]: Create button pressed")
 
+    def create_on_view(self, name):
+        return lambda: self.on_view_click(name)
+    
+    def create_on_edit(self, name):
+        return lambda: self.on_edit_click(name)
+
+    def create_on_download(self, name):
+        return lambda: self.on_download_click(name)
+
     def on_view_click(self, project_name):
-        print("[DEBUG]: View button pressed on project: " + project_name)
+        from json import load
+        from .canvas_frame import CanvasFrame
+        
+        def update_frame(json):
+            return lambda frame: frame.set_list_of_polygons(json)
+        
+        folder_path = os.path.join("projects", project_name)
+        print(folder_path)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                print(project_json:=load(project_file))
+                self.destroy()
+                self.master.change_frame(CanvasFrame, then_run=update_frame(project_json))
+        else:
+            print(f"{project_name} is empty")
 
     def on_edit_click(self, project_name):
         edit_data_partial = lambda new_master: EditData(
@@ -173,4 +199,4 @@ class StartFrame(ctk.CTkFrame):
         print("[DEBUG]: Edit button pressed on project: " + project_name)
 
     def on_download_click(self, project_name):
-        print("[DEBUG]: Download button pressed on project: " + project_name)
+        print("[DEBUG]: Download button pressed on project:", project_name)

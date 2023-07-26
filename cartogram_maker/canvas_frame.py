@@ -4,7 +4,7 @@ from .point import Point
 
 
 def random_color():
-    colors = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#24408E", "#732982"]
+    colors = ["E40303", "FF8C00", "FFED00", "008026", "24408E", "732982"]
     return random.choice(colors)
 
 
@@ -61,6 +61,7 @@ class CanvasFrame(ctk.CTkFrame):
         self.point_buffer = []  # Buffer to store a pair of points
         self.polygon_list = []  # List to store all the polygons
         self.colors       = {}
+        self.weights      = {}
 
         self.canvas = ctk.CTkCanvas(
             self, width=800, height=800, background="white", highlightthickness=0
@@ -71,7 +72,29 @@ class CanvasFrame(ctk.CTkFrame):
         self.canvas.bind("<Button-1>", self.create_click_event)
 
     def get_list_of_polygons(self):
-        return {id : { 'color' : self.colors[id], 'vertices' : polygon } for id, polygon in self.polygon_list}
+        return {id : { 'color' : self.colors[id], 'vertices' : polygon, 'weight' : self.weights[id] } for id, polygon in self.polygon_list}
+
+    def set_list_of_polygons(self, structure):
+        def func(x, y):
+            self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+            return Point(x, y)
+        
+        for _, substructure in structure.items():
+            point_buffer = [func(x, y) for x, y in substructure['vertices']]
+            
+            for (x1, y1), (x2, y2) in zip(point_buffer, point_buffer[1:]):
+                print(f"{x1}, {y1} -> {x2}, {y2}")
+                self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
+
+            self.polygon_list.append(
+                (
+                    id:=self.canvas.create_polygon(
+                        point_buffer, fill=substructure['color'], width=2
+                    ),
+                    point_buffer[:],
+                )
+            )
+            self.colors[id] = substructure['color']
 
     def on_undo_click(self):
         # Handle the undo button click event
@@ -130,7 +153,7 @@ class CanvasFrame(ctk.CTkFrame):
                 abs(self.point_buffer[i][0] - x) < 10
                 and abs(self.point_buffer[i][1] - y) < 10
             ):
-                dialog = ctk.CTkInputDialog(text="Enter a color value", title="Fill in Color")
+                # dialog = ctk.CTkInputDialog(text="Enter a color value", title="Fill in Color")
                 self.point_buffer.append(self.point_buffer[i])
                 x1, y1 = self.point_buffer[-2]
                 x2, y2 = self.point_buffer[-1]
@@ -138,12 +161,14 @@ class CanvasFrame(ctk.CTkFrame):
                 self.polygon_list.append(
                     (
                         id:=self.canvas.create_polygon(
-                            self.point_buffer, fill=(color := f"#{dialog.get_input()}"), width=2
+                            self.point_buffer, fill=(color := f"#{random_color()}"), width=2
                         ),
                         self.point_buffer[:],
                     )
                 )  # Add the polygon to the list
                 self.colors[id] = color
+                weight = ctk.CTkInputDialog(text="Enter a number value", title="Fill in Value")
+                self.weights[id] = float(weight.get_input())
                 self.point_buffer.clear()
                 return
 

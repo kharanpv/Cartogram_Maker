@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import json
+import os
 
 
 class CreationTool(ctk.CTkFrame):
@@ -54,8 +55,8 @@ class CreationTool(ctk.CTkFrame):
 
     def save(self):  # placeholder for future Save button functionality
         print("[DEBUG]: Save button pressed")
-        print(f"[DEBUG]: {self.canvas_frame.get_list_of_polygons()}")
-        print(f"[DEBUG]: {json.dumps(self.canvas_frame.get_list_of_polygons())}")
+        file_name = ctk.CTkInputDialog(text="Enter a file name", title="File Name").get_input()
+        json.dump(self.canvas_frame.get_list_of_polygons(), open(os.path.join("projects", f"{file_name}.json"), 'w'))
 
     def go_back(self):
         from .start_frame import StartFrame
