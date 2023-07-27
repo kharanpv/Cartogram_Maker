@@ -175,7 +175,7 @@ class StartFrame(ctk.CTkFrame):
 
     def on_view_click(self, project_name):
         from json import load
-        from .canvas_frame import CanvasFrame
+        from .view_frame import ViewFrame
         
         def update_frame(json):
             return lambda frame: frame.set_list_of_polygons(json)
@@ -187,7 +187,10 @@ class StartFrame(ctk.CTkFrame):
             with open(folder_path) as project_file:
                 print(project_json:=load(project_file))
                 self.destroy()
-                self.master.change_frame(CanvasFrame, then_run=update_frame(project_json))
+                view_frame_partial = lambda new_master: ViewFrame(
+                    master=new_master, project_name=project_name
+                    )
+                self.master.change_frame(view_frame_partial, then_run=update_frame(project_json))
         else:
             print(f"{project_name} is empty")
 
