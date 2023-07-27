@@ -75,17 +75,26 @@ class CanvasFrame(ctk.CTkFrame):
         return {id : { 'color' : self.colors[id], 'vertices' : polygon, 'weight' : self.weights[id] } for id, polygon in self.polygon_list}
 
     def set_list_of_polygons(self, structure):
+        # Temporary function to draw all points as ovals on the canvas and return as a `Point`
         def func(x, y):
+            # draws as oval on canvas
             self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+            # converts to the `Point` `NamedTuple`
             return Point(x, y)
         
         for _, substructure in structure.items():
+            # convert the vertex buffer (List[List[int]] -> List[Point])
+            # also draw to canvas with `func`
             point_buffer = [func(x, y) for x, y in substructure['vertices']]
             
+            # zip(a, a[1:]) -> [(a[0], a[1]), (a[1], a[2]), ..., (a[n - 1], a[n])]
             for (x1, y1), (x2, y2) in zip(point_buffer, point_buffer[1:]):
                 print(f"{x1}, {y1} -> {x2}, {y2}")
+                # creating lines from every value in the point buffer
                 self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
 
+            # creating a new polygon and appending it to the polygon list
+            # storing the polygon id with the walrus operator (PEP 572)
             self.polygon_list.append(
                 (
                     id:=self.canvas.create_polygon(
@@ -94,7 +103,10 @@ class CanvasFrame(ctk.CTkFrame):
                     point_buffer[:],
                 )
             )
+            # assigning the color associated to the id
             self.colors[id] = substructure['color']
+            # assigning the weight associate to the id
+            self.weights[id] = substructure['weight']
 
     def on_undo_click(self):
         # Handle the undo button click event
