@@ -219,7 +219,7 @@ class StartFrame(ctk.CTkFrame):
                 project_json=load(project_file)
                 im = json_to_image(project_json)
                 project_name_without_json = project_name.split(".")[0]
-                im.save(os.path.join("downloads", f"{project_name_without_json}.png"), quality=85)
+                im.save(os.path.join("project_images", f"{project_name_without_json}.png"), quality=85)
         else:
             print(f"{project_name} is empty")
 
