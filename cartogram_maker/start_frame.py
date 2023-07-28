@@ -169,7 +169,7 @@ class StartFrame(ctk.CTkFrame):
     def create_on_download(self, name):
         return lambda: self.on_download_click(name)
 
-    def on_view_click(self, project_name):
+    def on_edit_click(self, project_name):
         from json import load
         from .view_frame import ViewFrame
         
@@ -189,11 +189,15 @@ class StartFrame(ctk.CTkFrame):
         else:
             print(f"{project_name} is empty")
 
-    def on_edit_click(self, project_name):
-        edit_data_partial = lambda new_master: EditData(
-            master=new_master, project_name=project_name
-        )
-        self.master.change_frame(edit_data_partial)
+    # ---Old implementation---
+    # def on_edit_click(self, project_name):
+    #     edit_data_partial = lambda new_master: EditData(
+    #         master=new_master, project_name=project_name
+    #     )
+    #     self.master.change_frame(edit_data_partial)
+
+    def on_view_click(self, project_name):
+        print("[DEBUG]: View button pressed on project:", project_name)
 
     def on_download_click(self, project_name):
         print("[DEBUG]: Download button pressed on project:", project_name)
