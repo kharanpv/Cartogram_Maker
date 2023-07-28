@@ -197,7 +197,49 @@ class StartFrame(ctk.CTkFrame):
     #     self.master.change_frame(edit_data_partial)
 
     def on_view_click(self, project_name):
-        print(f"[DEBUG]: View button pressed on project: {project_name}")
+        from json import load
+
+        folder_path = os.path.join("projects", project_name)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                project_json=load(project_file)
+                im = json_to_image(project_json)
+                im.show()
+        else:
+            print(f"{project_name} is empty")
 
     def on_download_click(self, project_name):
-        print("[DEBUG]: Download button pressed on project:", project_name)
+        from json import load
+
+        folder_path = os.path.join("projects", project_name)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                project_json=load(project_file)
+                im = json_to_image(project_json)
+                project_name_without_json = project_name.split(".")[0]
+                im.save(os.path.join("downloads", f"{project_name_without_json}.png"), quality=85)
+        else:
+            print(f"{project_name} is empty")
+
+
+def json_to_image(structure):
+    from PIL import Image, ImageDraw
+
+    im = Image.new('RGB', (800, 500), color="white")
+    d = ImageDraw.Draw(im)
+
+    for _, substructure in structure.items():
+        point_buffer = substructure['vertices']
+
+        for (x, y) in point_buffer:
+            d.ellipse([(x - 2, y - 2), (x + 2, y + 2)], fill="black")
+
+        for (x1, y1), (x2, y2) in zip(point_buffer, point_buffer[1:]):
+            d.line([(x1, y1), (x2, y2)], fill="black", width=2)
+
+        d.polygon([(x, y) for x, y in point_buffer], fill=substructure['color'], outline="black", width=2)
+
+    return im
+    
