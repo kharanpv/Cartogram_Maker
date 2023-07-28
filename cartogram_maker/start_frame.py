@@ -197,7 +197,7 @@ class StartFrame(ctk.CTkFrame):
     #     self.master.change_frame(edit_data_partial)
 
     def on_view_click(self, project_name):
-        print("[DEBUG]: View button pressed on project:", project_name)
+        print(f"[DEBUG]: View button pressed on project: {project_name}")
 
     def on_download_click(self, project_name):
         print("[DEBUG]: Download button pressed on project:", project_name)
