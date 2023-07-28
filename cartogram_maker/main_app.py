@@ -26,8 +26,6 @@ class MainApp(ctk.CTk):
         if then_run: 
             then_run(self.main_frame)
 
-        print("[DEBUG]: Frame successfully changed")
-
 
 def main():
     app = MainApp()

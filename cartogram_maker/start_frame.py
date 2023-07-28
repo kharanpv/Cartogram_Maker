@@ -81,8 +81,6 @@ class StartFrame(ctk.CTkFrame):
         folder_path = os.path.join("projects")
         project_list = self.get_project_list(folder_path)
 
-        print("Project List:", project_list)
-
         row_num = 2  # starting row number for the project list
         for project in project_list:
             # appending the project name, last modified date and size to the project list
@@ -162,8 +160,6 @@ class StartFrame(ctk.CTkFrame):
             self.cartogram_dialogbox.focus()  # else focus on the existing instance
             self.cartogram_dialogbox.lift()
 
-        print("[DEBUG]: Create button pressed")
-
     def create_on_view(self, name):
         return lambda: self.on_view_click(name)
     
@@ -181,11 +177,10 @@ class StartFrame(ctk.CTkFrame):
             return lambda frame: frame.set_list_of_polygons(json)
         
         folder_path = os.path.join("projects", project_name)
-        print(folder_path)
 
         if os.path.getsize(folder_path) != 0:
             with open(folder_path) as project_file:
-                print(project_json:=load(project_file))
+                project_json=load(project_file)
                 self.destroy()
                 view_frame_partial = lambda new_master: ViewFrame(
                     master=new_master, project_name=project_name
@@ -199,7 +194,6 @@ class StartFrame(ctk.CTkFrame):
             master=new_master, project_name=project_name
         )
         self.master.change_frame(edit_data_partial)
-        print("[DEBUG]: Edit button pressed on project: " + project_name)
 
     def on_download_click(self, project_name):
         print("[DEBUG]: Download button pressed on project:", project_name)

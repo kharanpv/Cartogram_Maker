@@ -45,15 +45,12 @@ class CartogramDialogBox(ctk.CTkToplevel):
         self.create_button.grid(row=3, column=0, padx=10, pady=5, sticky="ns")
 
     def on_browse_click(self):
-        print("[DEBUG]: Browse button pressed")
-
         # open file explorer for json files
         file_path = ctk.filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
 
         if file_path:
             # copy file to project folder
             projects_folder = os.path.join(os.getcwd(), "projects")
-            print(projects_folder)
             shutil.copy(file_path, projects_folder)
 
         # destroy the dialog box
@@ -63,5 +60,3 @@ class CartogramDialogBox(ctk.CTkToplevel):
     def on_create_click(self):
         self.destroy()
         self.master.master.change_frame(CreationTool)
-
-        print("[DEBUG]: Create button pressed")

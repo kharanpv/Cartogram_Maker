@@ -48,13 +48,10 @@ class CreationTool(ctk.CTkFrame):
             row=1, column=0, padx=10, pady=10, sticky="sw"
         )  # Position the Exit button in the bottom left corner
 
-        print("[DEBUG]: creation_tool constructor finished")
-
     def generate(self):  # placeholder for future Generate button functionality
         print("[DEBUG]: Generate button pressed")
 
     def save(self):  # placeholder for future Save button functionality
-        print("[DEBUG]: Save button pressed")
         file_name = ctk.CTkInputDialog(text="Enter a file name", title="File Name").get_input()
         json.dump(self.canvas_frame.get_list_of_polygons(), open(os.path.join("projects", f"{file_name}.json"), 'w'))
 
@@ -63,8 +60,6 @@ class CreationTool(ctk.CTkFrame):
 
         # call main_app to change frame
         self.master.change_frame(StartFrame)
-
-        print("[DEBUG]: Go Back button pressed")
 
     def drag(event, canvas):  # Drag around the canvas when zooming in
         # canvas.scan_dragto(event.x, event.y, gain=1)

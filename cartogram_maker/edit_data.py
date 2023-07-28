@@ -56,14 +56,10 @@ class EditData(ctk.CTkFrame):
 
         self.master.change_frame(StartFrame)
 
-        print("[DEBUG]: Done button pressed")
-
     def on_back_click(self):
         from .start_frame import StartFrame
 
         self.master.change_frame(StartFrame)
-
-        print("[DEBUG]: Go Back button pressed")
 
     def row_remove(self, sign):
         if sign == '+': # add new row

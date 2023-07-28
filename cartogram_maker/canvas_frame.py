@@ -88,7 +88,6 @@ class CanvasFrame(ctk.CTkFrame):
             
             # zip(a, a[1:]) -> [(a[0], a[1]), (a[1], a[2]), ..., (a[n - 1], a[n])]
             for (x1, y1, id1), (x2, y2, id2) in zip(point_buffer, point_buffer[1:]):
-                print(f"{x1}, {y1} -> {x2}, {y2}")
                 # creating lines from every value in the point buffer
                 self.line_buffer[(id1, id2)] = self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
 
@@ -135,17 +134,13 @@ class CanvasFrame(ctk.CTkFrame):
             self.canvas.delete(self.line_buffer.pop((id1, id2)))  # delete the last line
             self.point_buffer.pop()  # remove the last point from the buffer
 
-        print("[DEBUG]: Undo button pressed")
-
     def on_plus_click(self):
         # Handle the plus button click event
         self.canvas.scale("all", 0, 0, 1.1, 1.1)  # Scale by 10%
-        print("[DEBUG]: Plus button pressed")
 
     def on_minus_click(self):
         # Handle the minus button click event
         self.canvas.scale("all", 0, 0, 0.9, 0.9)
-        print("[DEBUG]: Minus button pressed")
 
     # Function to handle the click event
     def create_click_event(self, event):
@@ -181,7 +176,6 @@ class CanvasFrame(ctk.CTkFrame):
                 return
 
         self.point_buffer.append(Point(x, y, oval_id:=self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")))
-        print(f"[DEBUG]: {oval_id=}")
 
         if (
             len(self.point_buffer) >= 2

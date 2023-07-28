@@ -35,8 +35,6 @@ class ViewFrame(ctk.CTkFrame):
         # call main_app to change frame
         self.master.change_frame(StartFrame)
 
-        print("[DEBUG]: Go Back button pressed")
-
     def create_on_edit(self, name):
         return lambda: self.edit(name)
     
@@ -47,8 +45,6 @@ class ViewFrame(ctk.CTkFrame):
             master=new_master, project_name=self.project_name
         )
         self.master.change_frame(edit_data_partial)
-
-        print("[DEBUG]: Edit button pressed")
 
     def set_list_of_polygons(self, structure):
         self.canvas_frame.set_list_of_polygons(structure)
