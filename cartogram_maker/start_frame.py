@@ -3,8 +3,6 @@ import os
 from datetime import datetime
 from .cartogram_dialogbox import CartogramDialogBox
 from .edit_data import EditData
-from PIL import Image, ImageTk
-
 
 class StartFrame(ctk.CTkFrame):
     def __init__(self, master):
@@ -81,8 +79,6 @@ class StartFrame(ctk.CTkFrame):
     def display_project_list(self, event=None):
         folder_path = os.path.join("projects")
         project_list = self.get_project_list(folder_path)
-
-        print("Project List:", project_list)
 
         row_num = 2  # starting row number for the project list
         for project in project_list:
@@ -163,8 +159,6 @@ class StartFrame(ctk.CTkFrame):
             self.cartogram_dialogbox.focus()  # else focus on the existing instance
             self.cartogram_dialogbox.lift()
 
-        print("[DEBUG]: Create button pressed")
-
     def create_on_view(self, name):
         return lambda: self.on_view_click(name)
     
@@ -174,7 +168,7 @@ class StartFrame(ctk.CTkFrame):
     def create_on_download(self, name):
         return lambda: self.on_download_click(name)
 
-    def on_view_click(self, project_name):
+    def on_edit_click(self, project_name):
         from json import load
         from .view_frame import ViewFrame
         
@@ -182,11 +176,10 @@ class StartFrame(ctk.CTkFrame):
             return lambda frame: frame.set_list_of_polygons(json)
         
         folder_path = os.path.join("projects", project_name)
-        print(folder_path)
 
         if os.path.getsize(folder_path) != 0:
             with open(folder_path) as project_file:
-                print(project_json:=load(project_file))
+                project_json=load(project_file)
                 self.destroy()
                 view_frame_partial = lambda new_master: ViewFrame(
                     master=new_master, project_name=project_name
@@ -195,12 +188,25 @@ class StartFrame(ctk.CTkFrame):
         else:
             print(f"{project_name} is empty")
 
-    def on_edit_click(self, project_name):
-        edit_data_partial = lambda new_master: EditData(
-            master=new_master, project_name=project_name
-        )
-        self.master.change_frame(edit_data_partial)
-        print("[DEBUG]: Edit button pressed on project: " + project_name)
+    # ---Old implementation---
+    # def on_edit_click(self, project_name):
+    #     edit_data_partial = lambda new_master: EditData(
+    #         master=new_master, project_name=project_name
+    #     )
+    #     self.master.change_frame(edit_data_partial)
+
+    def on_view_click(self, project_name):
+        from json import load
+
+        folder_path = os.path.join("projects", project_name)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                project_json=load(project_file)
+                im = json_to_image(project_json)
+                im.show()
+        else:
+            print(f"{project_name} is empty")
 
     def on_download_click(self, project_name):
         from json import load
@@ -224,8 +230,37 @@ class StartFrame(ctk.CTkFrame):
                     master=new_master, project_name=project_name
                     )
                 self.master.change_frame(canvas_frame_partial, then_run=update_frame(project_json))
+
+        folder_path = os.path.join("projects", project_name)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                project_json=load(project_file)
+                im = json_to_image(project_json)
+                project_name_without_json = project_name.split(".")[0]
+                im.save(os.path.join("project_images", f"{project_name_without_json}.png"), quality=85)
         else:
             print(f"{project_name} is empty")
 
 
         print("[DEBUG]: Download button pressed on project:", project_name)
+
+def json_to_image(structure):
+    from PIL import Image, ImageDraw
+
+    im = Image.new('RGB', (800, 500), color="white")
+    d = ImageDraw.Draw(im)
+
+    for _, substructure in structure.items():
+        point_buffer = substructure['vertices']
+
+        for (x, y) in point_buffer:
+            d.ellipse([(x - 2, y - 2), (x + 2, y + 2)], fill="black")
+
+        for (x1, y1), (x2, y2) in zip(point_buffer, point_buffer[1:]):
+            d.line([(x1, y1), (x2, y2)], fill="black", width=2)
+
+        d.polygon([(x, y) for x, y in point_buffer], fill=substructure['color'], outline="black", width=2)
+
+    return im
+    

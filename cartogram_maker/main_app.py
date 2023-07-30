@@ -23,9 +23,8 @@ class MainApp(ctk.CTk):
     def change_frame(self, frame, then_run = None):
         self.main_frame.destroy()
         self.main_frame = frame(self)
-        then_run(self.main_frame)
-
-        print("[DEBUG]: Frame successfully changed")
+        if then_run: 
+            then_run(self.main_frame)
 
 
 def main():

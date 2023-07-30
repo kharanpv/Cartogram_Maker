@@ -12,6 +12,7 @@ python = "^3.11"
 customtkinter = "^5.2.0"
 pillow = "^10.0.0"
 ctktable = "^0.7"
+numpy = "^1.25.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
