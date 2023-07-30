@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from .cartogram_dialogbox import CartogramDialogBox
 from .edit_data import EditData
+from PIL import Image, ImageTk
 
 
 class StartFrame(ctk.CTkFrame):
@@ -202,4 +203,29 @@ class StartFrame(ctk.CTkFrame):
         print("[DEBUG]: Edit button pressed on project: " + project_name)
 
     def on_download_click(self, project_name):
+        from json import load
+        from .canvas_frame import CanvasFrame
+
+        def update_frame(json):
+            def func(frame):
+                frame.set_list_of_polygons(json)
+                
+
+            return func
+        
+        folder_path = os.path.join("projects", project_name)
+        print(folder_path)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                print(project_json:=load(project_file))
+                self.destroy()
+                canvas_frame_partial = lambda new_master: CanvasFrame(
+                    master=new_master, project_name=project_name
+                    )
+                self.master.change_frame(canvas_frame_partial, then_run=update_frame(project_json))
+        else:
+            print(f"{project_name} is empty")
+
+
         print("[DEBUG]: Download button pressed on project:", project_name)
