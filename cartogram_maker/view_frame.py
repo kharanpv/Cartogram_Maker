@@ -38,13 +38,22 @@ class ViewFrame(ctk.CTkFrame):
     def create_on_edit(self, name):
         return lambda: self.edit(name)
     
-    def edit(self, project_name):
+    
+
+    def edit(self, file_name):
+        import json
+        import os
         from .edit_data import EditData
+
+        def populate_table(file_name):
+            return lambda frame: frame.update_table(file_name)
+
+        json.dump(self.canvas_frame.get_list_of_polygons(), open(os.path.join("projects", f"{file_name}"), 'w'))
 
         edit_data_partial = lambda new_master: EditData( # Create the EditData frame
             master=new_master, project_name=self.project_name
         )
-        self.master.change_frame(edit_data_partial)
+        self.master.change_frame(edit_data_partial, then_run=populate_table(file_name))
 
     def set_list_of_polygons(self, structure):
         self.canvas_frame.set_list_of_polygons(structure)

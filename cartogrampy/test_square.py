@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 from generate import *
 
-for step in range(26,50):
+for step in range(1,50):
     w, h = 500, 500
     im = Image.fromarray(np.zeros((w, h)), 'RGB')
     d = ImageDraw.Draw(im)

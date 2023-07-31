@@ -61,8 +61,9 @@ class CanvasFrame(ctk.CTkFrame):
         self.point_buffer = []  # Buffer to store a pair of points
         self.line_buffer  = {}
         self.polygon_list = []  # List to store all the polygons
-        self.colors       = {}
-        self.weights      = {}
+        self.colors       = {} 
+        self.weights      = {} # list to store all the weights of polygons
+        self.names        = {} # list to store all the names of polygons
 
         self.canvas = ctk.CTkCanvas(
             self, width=800, height=800, background="white", highlightthickness=0
@@ -73,7 +74,7 @@ class CanvasFrame(ctk.CTkFrame):
         self.canvas.bind("<Button-1>", self.create_click_event)
 
     def get_list_of_polygons(self):
-        return {id : { 'color' : self.colors[id], 'vertices' : [(x, y) for (x, y, _) in polygon], 'weight' : self.weights[id] } for id, polygon in self.polygon_list}
+        return {id : { 'color' : self.colors[id], 'vertices' : [(x, y) for (x, y, _) in polygon], 'weight' : self.weights[id], 'name': self.names[id] } for id, polygon in self.polygon_list}
 
     def set_list_of_polygons(self, structure):
         # Temporary function to draw all points as ovals on the canvas and return as a `Point`
@@ -101,10 +102,13 @@ class CanvasFrame(ctk.CTkFrame):
                     point_buffer[:],
                 )
             )
+
             # assigning the color associated to the id
             self.colors[id] = substructure['color']
             # assigning the weight associate to the id
             self.weights[id] = substructure['weight']
+            # assigning the name associate to the id
+            self.names[id] = substructure['name']
 
     def on_undo_click(self):
         # Handle the undo button click event
@@ -172,6 +176,8 @@ class CanvasFrame(ctk.CTkFrame):
                 self.colors[id] = color
                 weight = ctk.CTkInputDialog(text="Enter a number value", title="Fill in Value")
                 self.weights[id] = float(weight.get_input())
+                name = ctk.CTkInputDialog(text="Enter a name", title="Fill in Name")
+                self.names[id] = name.get_input()
                 self.point_buffer.clear()
                 return
 

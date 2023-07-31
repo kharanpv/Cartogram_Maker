@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import os
+from json import load
 from CTkTable import *
 
 
@@ -17,9 +19,11 @@ class EditData(ctk.CTkFrame):
         self.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
         #starting values
-        self.values = [["Name", "Data 1"], [project_name, ""]]
-        self.rows = 2 
+        self.values = [["Name", "Weight"]]
+        self.rows = 1 
         self.columns = 2
+
+        self.project_name = project_name
 
         self.table = CTkTable(
             master=self, row=self.rows, column=self.columns, values=self.values, corner_radius=2, write=1
@@ -51,8 +55,24 @@ class EditData(ctk.CTkFrame):
         )
         self.back_button.grid(row=2, column=0, padx=10, pady=10, sticky="sw")
 
-    def on_done_click(self):  # TODO: Save the data to the json file
+    def on_done_click(self):
         from .start_frame import StartFrame
+        import os
+        import json
+
+        folder_path = os.path.join("projects", self.project_name)
+
+        with open(folder_path) as project_file:
+            project_json=load(project_file)
+            project_json = list(project_json.items())
+
+            table = self.table.get()
+            for i in range(1, self.rows - 1):
+                key, values = project_json[i]
+                values['name'] = table[i][0]
+                values['weight'] = table[i][1]
+        
+        json.dump(dict(project_json), open(folder_path, 'w'))      
 
         self.master.change_frame(StartFrame)
 
@@ -66,9 +86,28 @@ class EditData(ctk.CTkFrame):
             self.table.add_row(["", ""])
             self.rows += 1
         elif sign == '-': # remove last row
-            self.table.delete_row(self.rows - 1)
-            self.rows -= 1
-    
+            if self.rows > 1:
+                self.table.delete_row(self.rows - 1)
+                self.rows -= 1
+
+    def update_table(self, project_name):
+        folder_path = os.path.join("projects", project_name)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                project_json=load(project_file)
+                
+                for _, values in project_json.items():
+                    weight = values["weight"]
+                    name = values["name"]
+                    self.table.add_row([name, weight])
+                    self.rows += 1
+        else:
+            self.table.add_row(["", ""])
+            self.rows += 1
+
+
+
     # ---For future implementation---
     # def column_remove(self, sign):
     #     if sign == '+': # add new column
