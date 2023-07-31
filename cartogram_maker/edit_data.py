@@ -18,28 +18,55 @@ class EditData(ctk.CTkFrame):
         self.grid_rowconfigure(2, weight=1)
         self.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        #starting values
+        # starting values
         self.values = [["Name", "Weight"]]
-        self.rows = 1 
+        self.rows = 1
         self.columns = 2
 
         self.project_name = project_name
 
         self.table = CTkTable(
-            master=self, row=self.rows, column=self.columns, values=self.values, corner_radius=2, write=1
+            master=self,
+            row=self.rows,
+            column=self.columns,
+            values=self.values,
+            corner_radius=2,
+            write=1,
         )
         self.table.grid(row=0, column=0, sticky="nsew")
 
-        self.row_add_button = ctk.CTkButton(self, text="+", command= lambda: self.row_remove('+'), width=40, fg_color="lightgray", 
-                                            text_color="black", font=("Arial", 30), corner_radius=2, hover_color="darkgray",)
-        self.row_add_button.grid(row=1, column=0, padx=(0, 50), pady=(5, 0), sticky="se")
+        self.row_add_button = ctk.CTkButton(
+            self,
+            text="+",
+            command=lambda: self.row_remove("+"),
+            width=40,
+            fg_color="lightgray",
+            text_color="black",
+            font=("Arial", 30),
+            corner_radius=2,
+            hover_color="darkgray",
+        )
+        self.row_add_button.grid(
+            row=1, column=0, padx=(0, 50), pady=(5, 0), sticky="se"
+        )
 
-        self.row_remove_button = ctk.CTkButton(self, text="-", command= lambda: self.row_remove('-'), width=40, fg_color="lightgray",
-                                            text_color="black", font=("Arial", 30), corner_radius=2, hover_color="darkgray",)
-        self.row_remove_button.grid(row=1, column=0, padx=(0, 5), pady=(5, 0), sticky="se")
+        self.row_remove_button = ctk.CTkButton(
+            self,
+            text="-",
+            command=lambda: self.row_remove("-"),
+            width=40,
+            fg_color="lightgray",
+            text_color="black",
+            font=("Arial", 30),
+            corner_radius=2,
+            hover_color="darkgray",
+        )
+        self.row_remove_button.grid(
+            row=1, column=0, padx=(0, 5), pady=(5, 0), sticky="se"
+        )
 
         # ---For future implementation---
-        # self.column_add_button = ctk.CTkButton(self, text="+", command= lambda: self.column_remove('+'), width=40, fg_color="lightgray", 
+        # self.column_add_button = ctk.CTkButton(self, text="+", command= lambda: self.column_remove('+'), width=40, fg_color="lightgray",
         #                                     text_color="black", font=("Arial", 30), corner_radius=2, hover_color="darkgray",)
         # self.column_add_button.grid(row=0, column=1, padx=(5, 0), pady=(0, 5), sticky="se")
 
@@ -63,16 +90,16 @@ class EditData(ctk.CTkFrame):
         folder_path = os.path.join("projects", self.project_name)
 
         with open(folder_path) as project_file:
-            project_json=load(project_file)
+            project_json = load(project_file)
             project_json = list(project_json.items())
 
             table = self.table.get()
-            for i in range(1, self.rows - 1):
-                key, values = project_json[i]
-                values['name'] = table[i][0]
-                values['weight'] = table[i][1]
-        
-        json.dump(dict(project_json), open(folder_path, 'w'))      
+            for i in range(1, self.rows):
+                key, values = project_json[i - 1]
+                values["name"] = table[i][0]
+                values["weight"] = float(table[i][1])
+
+        json.dump(dict(project_json), open(folder_path, "w"))
 
         self.master.change_frame(StartFrame)
 
@@ -82,10 +109,10 @@ class EditData(ctk.CTkFrame):
         self.master.change_frame(StartFrame)
 
     def row_remove(self, sign):
-        if sign == '+': # add new row
+        if sign == "+":  # add new row
             self.table.add_row(["", ""])
             self.rows += 1
-        elif sign == '-': # remove last row
+        elif sign == "-":  # remove last row
             if self.rows > 1:
                 self.table.delete_row(self.rows - 1)
                 self.rows -= 1
@@ -95,8 +122,8 @@ class EditData(ctk.CTkFrame):
 
         if os.path.getsize(folder_path) != 0:
             with open(folder_path) as project_file:
-                project_json=load(project_file)
-                
+                project_json = load(project_file)
+
                 for _, values in project_json.items():
                     weight = values["weight"]
                     name = values["name"]
@@ -105,8 +132,6 @@ class EditData(ctk.CTkFrame):
         else:
             self.table.add_row(["", ""])
             self.rows += 1
-
-
 
     # ---For future implementation---
     # def column_remove(self, sign):
