@@ -4,6 +4,7 @@ from datetime import datetime
 from .cartogram_dialogbox import CartogramDialogBox
 from .edit_data import EditData
 
+
 class StartFrame(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(
@@ -161,7 +162,7 @@ class StartFrame(ctk.CTkFrame):
 
     def create_on_view(self, name):
         return lambda: self.on_view_click(name)
-    
+
     def create_on_edit(self, name):
         return lambda: self.on_edit_click(name)
 
@@ -171,20 +172,22 @@ class StartFrame(ctk.CTkFrame):
     def on_edit_click(self, project_name):
         from json import load
         from .view_frame import ViewFrame
-        
+
         def update_frame(json):
             return lambda frame: frame.set_list_of_polygons(json)
-        
+
         folder_path = os.path.join("projects", project_name)
 
         if os.path.getsize(folder_path) != 0:
             with open(folder_path) as project_file:
-                project_json=load(project_file)
+                project_json = load(project_file)
                 self.destroy()
                 view_frame_partial = lambda new_master: ViewFrame(
                     master=new_master, project_name=project_name
-                    )
-                self.master.change_frame(view_frame_partial, then_run=update_frame(project_json))
+                )
+                self.master.change_frame(
+                    view_frame_partial, then_run=update_frame(project_json)
+                )
         else:
             print(f"{project_name} is empty")
 
@@ -202,7 +205,7 @@ class StartFrame(ctk.CTkFrame):
 
         if os.path.getsize(folder_path) != 0:
             with open(folder_path) as project_file:
-                project_json=load(project_file)
+                project_json = load(project_file)
                 im = json_to_image(project_json)
                 im.show()
         else:
@@ -215,31 +218,39 @@ class StartFrame(ctk.CTkFrame):
 
         if os.path.getsize(folder_path) != 0:
             with open(folder_path) as project_file:
-                project_json=load(project_file)
+                project_json = load(project_file)
                 im = json_to_image(project_json)
                 project_name_without_json = project_name.split(".")[0]
-                im.save(os.path.join("project_images", f"{project_name_without_json}.png"), quality=85)
+                im.save(
+                    os.path.join("project_images", f"{project_name_without_json}.png"),
+                    quality=85,
+                )
         else:
             print(f"{project_name} is empty")
 
         print("[DEBUG]: Download button pressed on project:", project_name)
 
+
 def json_to_image(structure):
     from PIL import Image, ImageDraw
 
-    im = Image.new('RGB', (800, 500), color="white")
+    im = Image.new("RGB", (800, 500), color="white")
     d = ImageDraw.Draw(im)
 
     for _, substructure in structure.items():
-        point_buffer = substructure['vertices']
+        point_buffer = substructure["vertices"]
 
-        for (x, y) in point_buffer:
+        for x, y in point_buffer:
             d.ellipse([(x - 2, y - 2), (x + 2, y + 2)], fill="black")
 
         for (x1, y1), (x2, y2) in zip(point_buffer, point_buffer[1:]):
             d.line([(x1, y1), (x2, y2)], fill="black", width=2)
 
-        d.polygon([(x, y) for x, y in point_buffer], fill=substructure['color'], outline="black", width=2)
+        d.polygon(
+            [(x, y) for x, y in point_buffer],
+            fill=substructure["color"],
+            outline="black",
+            width=2,
+        )
 
     return im
-    

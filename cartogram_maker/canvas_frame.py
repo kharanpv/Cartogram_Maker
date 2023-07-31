@@ -59,11 +59,11 @@ class CanvasFrame(ctk.CTkFrame):
         self.minus_button.grid(row=0, column=1, padx=(0, 5), pady=(0, 5), sticky="se")
 
         self.point_buffer = []  # Buffer to store a pair of points
-        self.line_buffer  = {}
+        self.line_buffer = {}
         self.polygon_list = []  # List to store all the polygons
-        self.colors       = {} 
-        self.weights      = {} # list to store all the weights of polygons
-        self.names        = {} # list to store all the names of polygons
+        self.colors = {}
+        self.weights = {}  # list to store all the weights of polygons
+        self.names = {}  # list to store all the names of polygons
 
         self.canvas = ctk.CTkCanvas(
             self, width=800, height=800, background="white", highlightthickness=0
@@ -74,41 +74,55 @@ class CanvasFrame(ctk.CTkFrame):
         self.canvas.bind("<Button-1>", self.create_click_event)
 
     def get_list_of_polygons(self):
-        return {id : { 'color' : self.colors[id], 'vertices' : [(x, y) for (x, y, _) in polygon], 'weight' : self.weights[id], 'name': self.names[id] } for id, polygon in self.polygon_list}
+        return {
+            id: {
+                "color": self.colors[id],
+                "vertices": [(x, y) for (x, y, _) in polygon],
+                "weight": self.weights[id],
+                "name": self.names[id],
+            }
+            for id, polygon in self.polygon_list
+        }
 
     def set_list_of_polygons(self, structure):
         # Temporary function to draw all points as ovals on the canvas and return as a `Point`
         def func(x, y):
             # draws as oval on canvas and converts to the `Point` `NamedTuple`
-            return Point(x, y, self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black"))
-        
+            return Point(
+                x, y, self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+            )
+
         for _, substructure in structure.items():
             # convert the vertex buffer (List[List[int]] -> List[Point])
             # also draw to canvas with `func`
-            point_buffer = [func(x, y) for x, y in substructure['vertices']]
-            
+            point_buffer = [func(x, y) for x, y in substructure["vertices"]]
+
             # zip(a, a[1:]) -> [(a[0], a[1]), (a[1], a[2]), ..., (a[n - 1], a[n])]
             for (x1, y1, id1), (x2, y2, id2) in zip(point_buffer, point_buffer[1:]):
                 # creating lines from every value in the point buffer
-                self.line_buffer[(id1, id2)] = self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
+                self.line_buffer[(id1, id2)] = self.canvas.create_line(
+                    x1, y1, x2, y2, fill="black", width=2
+                )
 
             # creating a new polygon and appending it to the polygon list
             # storing the polygon id with the walrus operator (PEP 572)
             self.polygon_list.append(
                 (
-                    id:=self.canvas.create_polygon(
-                        [(x, y) for (x, y, _) in point_buffer], fill=substructure['color'], width=2
+                    id := self.canvas.create_polygon(
+                        [(x, y) for (x, y, _) in point_buffer],
+                        fill=substructure["color"],
+                        width=2,
                     ),
                     point_buffer[:],
                 )
             )
 
             # assigning the color associated to the id
-            self.colors[id] = substructure['color']
+            self.colors[id] = substructure["color"]
             # assigning the weight associate to the id
-            self.weights[id] = substructure['weight']
+            self.weights[id] = substructure["weight"]
             # assigning the name associate to the id
-            self.names[id] = substructure['name']
+            self.names[id] = substructure["name"]
 
     def on_undo_click(self):
         # Handle the undo button click event
@@ -134,7 +148,7 @@ class CanvasFrame(ctk.CTkFrame):
             # delete the last point and line
             *_, id1 = self.point_buffer[-2]
             *_, id2 = self.point_buffer[-1]
-            self.canvas.delete(id2) #delete the last point
+            self.canvas.delete(id2)  # delete the last point
             self.canvas.delete(self.line_buffer.pop((id1, id2)))  # delete the last line
             self.point_buffer.pop()  # remove the last point from the buffer
 
@@ -164,28 +178,44 @@ class CanvasFrame(ctk.CTkFrame):
                 self.point_buffer.append(self.point_buffer[i])
                 x1, y1, id1 = self.point_buffer[-2]
                 x2, y2, id2 = self.point_buffer[-1]
-                self.line_buffer[(id1, id2)] = self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
+                self.line_buffer[(id1, id2)] = self.canvas.create_line(
+                    x1, y1, x2, y2, fill="black", width=2
+                )
                 self.polygon_list.append(
                     (
-                        id:=self.canvas.create_polygon(
-                            [(x, y) for (x, y, _) in self.point_buffer], fill=(color := f"#{random_color()}"), width=2
+                        id := self.canvas.create_polygon(
+                            [(x, y) for (x, y, _) in self.point_buffer],
+                            fill=(color := f"#{random_color()}"),
+                            width=2,
                         ),
                         self.point_buffer[:],
                     )
                 )  # Add the polygon to the list
                 self.colors[id] = color
-                weight = ctk.CTkInputDialog(text="Enter a number value", title="Fill in Value")
+                weight = ctk.CTkInputDialog(
+                    text="Enter a number value", title="Fill in Value"
+                )
                 self.weights[id] = float(weight.get_input())
                 name = ctk.CTkInputDialog(text="Enter a name", title="Fill in Name")
                 self.names[id] = name.get_input()
                 self.point_buffer.clear()
                 return
 
-        self.point_buffer.append(Point(x, y, oval_id:=self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")))
+        self.point_buffer.append(
+            Point(
+                x,
+                y,
+                oval_id := self.canvas.create_oval(
+                    x - 2, y - 2, x + 2, y + 2, fill="black"
+                ),
+            )
+        )
 
         if (
             len(self.point_buffer) >= 2
         ):  # If the buffer has atleast 2 points, draw a line
             x1, y1, id1 = self.point_buffer[-2]
             x2, y2, id2 = self.point_buffer[-1]
-            self.line_buffer[(id1, id2)] = self.canvas.create_line(x1, y1, x2, y2, fill="black", width=2)
+            self.line_buffer[(id1, id2)] = self.canvas.create_line(
+                x1, y1, x2, y2, fill="black", width=2
+            )

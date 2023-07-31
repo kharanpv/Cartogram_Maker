@@ -52,8 +52,13 @@ class CreationTool(ctk.CTkFrame):
         print("[DEBUG]: Generate button pressed")
 
     def save(self):  # placeholder for future Save button functionality
-        file_name = ctk.CTkInputDialog(text="Enter a file name", title="File Name").get_input()
-        json.dump(self.canvas_frame.get_list_of_polygons(), open(os.path.join("projects", f"{file_name}.json"), 'w'))
+        file_name = ctk.CTkInputDialog(
+            text="Enter a file name", title="File Name"
+        ).get_input()
+        json.dump(
+            self.canvas_frame.get_list_of_polygons(),
+            open(os.path.join("projects", f"{file_name}.json"), "w"),
+        )
 
     def go_back(self):
         from .start_frame import StartFrame

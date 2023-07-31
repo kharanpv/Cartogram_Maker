@@ -20,10 +20,10 @@ class MainApp(ctk.CTk):
 
         self.main_frame = StartFrame(self)  # Change the frame to start_frame
 
-    def change_frame(self, frame, then_run = None):
+    def change_frame(self, frame, then_run=None):
         self.main_frame.destroy()
         self.main_frame = frame(self)
-        if then_run: 
+        if then_run:
             then_run(self.main_frame)
 
 
