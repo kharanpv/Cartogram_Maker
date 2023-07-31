@@ -104,9 +104,26 @@ class EditData(ctk.CTkFrame):
         self.master.change_frame(StartFrame)
 
     def on_back_click(self):
-        from .start_frame import StartFrame
+        from json import load
+        from .view_frame import ViewFrame
 
-        self.master.change_frame(StartFrame)
+        def update_frame(json):
+            return lambda frame: frame.set_list_of_polygons(json)
+
+        folder_path = os.path.join("projects", self.project_name)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                project_json = load(project_file)
+                self.destroy()
+                view_frame_partial = lambda new_master: ViewFrame(
+                    master=new_master, project_name=self.project_name
+                )
+                self.master.change_frame(
+                    view_frame_partial, then_run=update_frame(project_json)
+                )
+        else:
+            print(f"{self.project_name} is empty")
 
     def row_remove(self, sign):
         if sign == "+":  # add new row
