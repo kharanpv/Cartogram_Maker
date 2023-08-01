@@ -146,21 +146,23 @@ class CanvasFrame(ctk.CTkFrame):
         # getting the width and height 
         w, h = im.width, im.height
 
-        # creating the weight matrix, row count is the height, column count is the width
-        # coordinates x, y correspond with column x row y
-        z = np.zeros((h, w))
+        # running 5 generation cycles
+        for i in range(5):
+            # creating the weight matrix, row count is the height, column count is the width
+            # coordinates x, y correspond with column x row y
+            z = np.zeros((h, w))
 
-        # creating the weight matrix
-        # #FFFFFF | (255, 255, 255) | white is set to weight average
-        # every other color is set to the weight value that corresponds to it in the json
-        for i in range(w):
-            for j in range(h):
-                hex_color = color_tuple_to_hex(im.getpixel((i, j)))
-                z[j, i] = color_to_weight.get(hex_color, weight_average)
+            # creating the weight matrix
+            # #FFFFFF | (255, 255, 255) | white is set to weight average
+            # every other color is set to the weight value that corresponds to it in the json
+            for i in range(w):
+                for j in range(h):
+                    hex_color = color_tuple_to_hex(im.getpixel((i, j)))
+                    z[j, i] = color_to_weight.get(hex_color, weight_average)
 
-        # generate the cartogram
-        # will also download to project_images/cartogram_tmp.png
-        im = cartogram(im, z)
+            # generate the cartogram
+            # will also download to project_images/cartogram_tmp.png
+            im = cartogram(im, z)
 
         # will also show the image 
         im.show()
