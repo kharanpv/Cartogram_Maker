@@ -143,7 +143,7 @@ class CanvasFrame(ctk.CTkFrame):
         )
         im = json_to_image(image)
 
-        # getting the width and height 
+        # getting the width and height
         w, h = im.width, im.height
 
         # running 5 generation cycles
@@ -164,7 +164,7 @@ class CanvasFrame(ctk.CTkFrame):
             # will also download to project_images/cartogram_tmp.png
             im = cartogram(im, z)
 
-        # will also show the image 
+        # will also show the image
         im.show()
 
     def on_undo_click(self):
@@ -230,7 +230,7 @@ class CanvasFrame(ctk.CTkFrame):
                     text={
                         "color": ("Fill in the Color", str),
                         "name": ("Fill in the Name", str),
-                        "Density": ("Fill in the Density", float),
+                        "density": ("Fill in the Density", float),
                     },
                 )
                 dialog_result = dialog.get_input()
@@ -245,7 +245,7 @@ class CanvasFrame(ctk.CTkFrame):
                     )
                 )  # Add the polygon to the list
                 self.colors[id] = color
-                self.weights[id] = dialog_result["weight"]
+                self.weights[id] = dialog_result["density"]
                 self.names[id] = dialog_result["name"]
 
                 self.point_buffer.clear()
