@@ -146,4 +146,5 @@ def cartogram(img, z, clean=True):
         os.remove(points_disp_fp)
 
     print("\nDONE ...{:.2f} seconds total".format(time.perf_counter() - c_start))
+    img.save(os.path.join("project_images", "cartogram_tmp.png"), quality=85)
     return img
