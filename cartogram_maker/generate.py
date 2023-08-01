@@ -140,10 +140,10 @@ def cartogram(img, z, clean=True):
 
     if clean:
         print("\ncleaning up temporary files")
-        sp.run("rm {}".format(z_fp), shell=True)
-        sp.run("rm {}".format(disp_fp), shell=True)
-        sp.run("rm {}".format(points_fp), shell=True)
-        sp.run("rm {}".format(points_disp_fp), shell=True)
+        os.remove(z_fp)
+        os.remove(disp_fp)
+        os.remove(points_fp)
+        os.remove(points_disp_fp)
 
     print("\nDONE ...{:.2f} seconds total".format(time.perf_counter() - c_start))
     return img
