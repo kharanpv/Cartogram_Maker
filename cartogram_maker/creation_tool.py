@@ -69,15 +69,11 @@ class CreationTool(ctk.CTkFrame):
 
         w, h = im.width, im.height
 
-        print(f"{w}, {h}")
-
         z = np.zeros((h, w))
-
-        print(color_to_weight)
 
         for i in range(w):
             for j in range(h):
-                hex_color = color_tuple_to_hex(pc := im.getpixel((i, j)))
+                hex_color = color_tuple_to_hex(im.getpixel((i, j)))
                 z[j, i] = color_to_weight.get(hex_color, weight_average)
 
         im = cartogram(im, z)

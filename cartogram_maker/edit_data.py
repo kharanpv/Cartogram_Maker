@@ -196,11 +196,7 @@ class EditData(ctk.CTkFrame):
 
         w, h = im.width, im.height
 
-        print(f"{w}, {h}")
-
         z = np.zeros((h, w))
-
-        print(color_to_weight)
 
         for i in range(w):
             for j in range(h):
