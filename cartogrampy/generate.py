@@ -1,4 +1,3 @@
-import random
 import itertools as itr
 import numpy as np
 import subprocess as sp
