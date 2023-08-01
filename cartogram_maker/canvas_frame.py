@@ -124,6 +124,38 @@ class CanvasFrame(ctk.CTkFrame):
             # assigning the name associate to the id
             self.names[id] = substructure["name"]
 
+    def generate(self):  # placeholder for future Generate button functionality
+        def color_tuple_to_hex(color: tuple[int, int, int]) -> str:
+            # since we know that PIL will give a valid color, we can forego clamping these values
+            return f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}".upper()
+
+        from .start_frame import json_to_image
+        from .generate import cartogram
+        import numpy as np
+
+        image = self.get_list_of_polygons()
+        color_to_weight = {
+            substructure["color"]: substructure["weight"]
+            for _, substructure in image.items()
+        }
+        weight_average = sum(v for _, v in color_to_weight.items()) / len(
+            color_to_weight
+        )
+        im = json_to_image(image)
+
+        w, h = im.width, im.height
+
+        z = np.zeros((h, w))
+
+        for i in range(w):
+            for j in range(h):
+                hex_color = color_tuple_to_hex(im.getpixel((i, j)))
+                z[j, i] = color_to_weight.get(hex_color, weight_average)
+
+        im = cartogram(im, z)
+
+        im.show()
+
     def on_undo_click(self):
         # Handle the undo button click event
         if len(self.point_buffer) > 1:

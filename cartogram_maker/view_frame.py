@@ -24,15 +24,28 @@ class ViewFrame(ctk.CTkFrame):
             self, text="Go Back", command=self.go_back, fg_color="red"
         )
         self.exit_button.grid(
-            row=1, column=0, padx=10, pady=10, sticky="se"
+            row=1, column=0, padx=10, pady=10, sticky="sw"
         )  # Position the Exit button in the bottom left corner
 
-        self.edit_button = ctk.CTkButton(  # Create the Edit button
-            self, text="Edit", command=self.create_on_edit(self.project_name)
-        )
-        self.edit_button.grid(
-            row=1, column=0, padx=10, pady=10, sticky="sw"
-        )  # Position the Edit button in the bottom right corner
+        self.generate_button = ctk.CTkButton(
+            self, text="Generate", command=self.generate
+        )  # Create the Generate button
+        self.generate_button.grid(
+            row=1, column=0, padx=10, pady=10, sticky="se"
+        )  # Position the button in the bottom right corner
+
+        self.save_button = ctk.CTkButton(
+            self, text="Edit", 
+            command=self.create_on_edit(project_name)
+        )  # Create the Save button
+        self.save_button.grid(
+            row=1,
+            column=0,
+            # CTkButton default width is 140, add 20 to account for the padx of the save button and that of the generate button
+            padx=self.generate_button._current_width + 20,
+            pady=10,
+            sticky="se",
+        )  # Position the button in the bottom center
 
     def go_back(self):
         from .start_frame import StartFrame
@@ -63,3 +76,6 @@ class ViewFrame(ctk.CTkFrame):
 
     def set_list_of_polygons(self, structure):
         self.canvas_frame.set_list_of_polygons(structure)
+
+    def generate(self):
+        self.canvas_frame.generate()

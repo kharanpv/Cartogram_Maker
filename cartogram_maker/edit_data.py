@@ -74,15 +74,12 @@ class EditData(ctk.CTkFrame):
         #                                     text_color="black", font=("Arial", 30), corner_radius=2, hover_color="darkgray",)
         # self.column_remove_button.grid(row=0, column=1, padx=(5, 0), pady=(0, 50), sticky="se")
 
-        self.done_button = ctk.CTkButton(self, text="Done", command=self.on_done_click)
-        self.done_button.grid(row=2, column=1, padx=10, pady=10, sticky="se")
-
         self.back_button = ctk.CTkButton(
             self, text="Go Back", command=self.on_back_click, fg_color="red"
         )
         self.back_button.grid(row=2, column=0, padx=10, pady=10, sticky="sw")
 
-        self.generate_button = ctk.CTkButton(self, text="Generate", command=self.generate)
+        self.generate_button = ctk.CTkButton(self, text="Save", command=self.save)
         self.generate_button.grid(row=2, column=2, padx=10, pady=10, sticky="se")
 
     def on_done_click(self):
@@ -153,14 +150,8 @@ class EditData(ctk.CTkFrame):
             self.table.add_row(["", ""])
             self.rows += 1
 
-    def generate(self):  # placeholder for future Generate button functionality
-        def color_tuple_to_hex(color: tuple[int, int, int]) -> str:
-            # since we know that PIL will give a valid color, we can forego clamping these values
-            return f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}".upper()
-
-        from .start_frame import json_to_image
-        from .generate import cartogram
-        import numpy as np
+    def save(self):
+        from .view_frame import ViewFrame
         import os
         import json
 
@@ -178,34 +169,12 @@ class EditData(ctk.CTkFrame):
 
         json.dump(dict(project_json), open(folder_path, "w"))
 
-        folder_path = os.path.join("projects", self.project_name)
+        def update_frame(json):
+            return lambda frame: frame.set_list_of_polygons(json)
+        
+        view_frame_partial = lambda new_master: ViewFrame(master=new_master, project_name=self.project_name)
 
-        if os.path.getsize(folder_path) != 0:
-            with open(folder_path) as project_file:
-                image = load(project_file)
-
-        # image = self.canvas_frame.get_list_of_polygons()
-        color_to_weight = {
-            substructure["color"]: substructure["weight"]
-            for _, substructure in image.items()
-        }
-        weight_average = sum(v for _, v in color_to_weight.items()) / len(
-            color_to_weight
-        )
-        im = json_to_image(image)
-
-        w, h = im.width, im.height
-
-        z = np.zeros((h, w))
-
-        for i in range(w):
-            for j in range(h):
-                hex_color = color_tuple_to_hex(pc := im.getpixel((i, j)))
-                z[j, i] = color_to_weight.get(hex_color, weight_average)
-
-        im = cartogram(im, z)
-
-        im.show()
+        self.master.change_frame(view_frame_partial, then_run=update_frame(dict(project_json)))
 
     # ---For future implementation---
     # def column_remove(self, sign):
