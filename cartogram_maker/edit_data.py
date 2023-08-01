@@ -19,7 +19,7 @@ class EditData(ctk.CTkFrame):
         self.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
         # starting values
-        self.values = [["Name", "Weight"]]
+        self.values = [["Name", "Density"]]
         self.rows = 1
         self.columns = 2
 
