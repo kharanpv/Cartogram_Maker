@@ -30,11 +30,11 @@ class PolygonInputDialog(ctk.CTkToplevel):
         self.grid_columnconfigure((0, 1), weight=1)
         self.rowconfigure(0, weight=1)
 
-        self._entry: dict[str, ctk.CTkEntry] = {}
+        self._entry: dict[str, (ctk.CTkEntry, Callable[[Any], Any])] = {}
         self._entry_list: list[ctk.CTkEntry] = []
 
         i = 0
-        for k, (text, _) in self._text.items():
+        for k, (text, callback) in self._text.items():
             self._label = ctk.CTkLabel(
                 master=self,
                 width=300,
@@ -50,7 +50,7 @@ class PolygonInputDialog(ctk.CTkToplevel):
             self._current_entry.grid(
                 row=i + 1, column=0, columnspan=2, padx=20, pady=(0, 20), sticky="ew"
             )
-            self._entry[k] = self._current_entry
+            self._entry[k] = (self._current_entry, callback)
             self._entry_list.append(self._current_entry)
 
             i += 2
@@ -83,7 +83,7 @@ class PolygonInputDialog(ctk.CTkToplevel):
         self._entry_list[-1].bind("<Return>", self._ok_event)
 
     def _ok_event(self, _=None):
-        self._user_input = {k: entry.get() for k, entry in self._entry.items()}
+        self._user_input = {k: callback(entry.get()) for k, (entry, callback) in self._entry.items()}
         self.grab_release()
         self.destroy()
 

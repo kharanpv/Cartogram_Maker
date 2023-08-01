@@ -189,7 +189,7 @@ class EditData(ctk.CTkFrame):
             substructure["color"]: substructure["weight"]
             for _, substructure in image.items()
         }
-        weight_average = sum(int(v) for _, v in color_to_weight.items()) / len(
+        weight_average = sum(v for _, v in color_to_weight.items()) / len(
             color_to_weight
         )
         im = json_to_image(image)

@@ -187,7 +187,7 @@ class CanvasFrame(ctk.CTkFrame):
                     text={
                         "color": ("Fill in the Color", str),
                         "name": ("Fill in the Name", str),
-                        "weight": ("Fill in the Weight", str),
+                        "weight": ("Fill in the Weight", float),
                     },
                 )
                 dialog_result = dialog.get_input()
