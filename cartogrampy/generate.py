@@ -73,6 +73,9 @@ def show_displacements ():
 
 
 def cartogram (img, z, clean=False):
+
+
+
     c_start = time.perf_counter()
     w, h, d = np.asarray(img).shape
     print('\n==== Generating a new cartogram with shape w: {} h: {} ===='.format(w, h))
@@ -148,3 +151,4 @@ def cartogram (img, z, clean=False):
 
     print('\nDONE ...{:.2f} seconds total'.format(time.perf_counter() - c_start))
     return img
+

@@ -51,7 +51,8 @@ class CartogramDialogBox(ctk.CTkToplevel):
         if file_path:
             # copy file to project folder
             projects_folder = os.path.join(os.getcwd(), "projects")
-            shutil.copy(file_path, projects_folder)
+            if os.path.normpath(os.path.dirname(file_path)) != os.path.normpath(projects_folder):
+                shutil.copy(file_path, projects_folder)
 
         # destroy the dialog box
         self.destroy()

@@ -82,6 +82,9 @@ class EditData(ctk.CTkFrame):
         )
         self.back_button.grid(row=2, column=0, padx=10, pady=10, sticky="sw")
 
+        self.generate_button = ctk.CTkButton(self, text="Generate", command=self.generate)
+        self.generate_button.grid(row=2, column=2, padx=10, pady=10, sticky="se")
+
     def on_done_click(self):
         from .start_frame import StartFrame
         import os
@@ -149,6 +152,48 @@ class EditData(ctk.CTkFrame):
         else:
             self.table.add_row(["", ""])
             self.rows += 1
+
+    def generate(self):  # placeholder for future Generate button functionality
+        def color_tuple_to_hex(color: tuple[int, int, int]) -> str:
+            # since we know that PIL will give a valid color, we can forego clamping these values
+            return f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}".upper()
+
+        from .start_frame import json_to_image
+        from .generate import cartogram
+        import numpy as np
+
+        folder_path = os.path.join("projects", self.project_name)
+
+        if os.path.getsize(folder_path) != 0:
+            with open(folder_path) as project_file:
+                image = load(project_file)
+
+        # image = self.canvas_frame.get_list_of_polygons()
+        color_to_weight = {
+            substructure["color"]: substructure["weight"]
+            for _, substructure in image.items()
+        }
+        weight_average = sum(int(v) for _, v in color_to_weight.items()) / len(
+            color_to_weight
+        )
+        im = json_to_image(image)
+
+        w, h = im.width, im.height
+
+        print(f"{w}, {h}")
+
+        z = np.zeros((h, w))
+
+        print(color_to_weight)
+
+        for i in range(w):
+            for j in range(h):
+                hex_color = color_tuple_to_hex(pc := im.getpixel((i, j)))
+                z[j, i] = color_to_weight.get(hex_color, weight_average)
+
+        im = cartogram(im, z)
+
+        im.show()
 
     # ---For future implementation---
     # def column_remove(self, sign):

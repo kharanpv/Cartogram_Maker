@@ -69,8 +69,8 @@ def displace_point(x, y, vec, mesh):
     mesh[y, x] += vec
     return mesh[y, x]
 
-
 def cartogram(img, z, clean=True):
+    #check if machine is windows, if not, switch to wsl
     c_start = time.perf_counter()
     w, h = img.width, img.height
     print("\n==== Generating a new cartogram with shape w: {} h: {} ====".format(w, h))
