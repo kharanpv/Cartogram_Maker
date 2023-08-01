@@ -161,6 +161,22 @@ class EditData(ctk.CTkFrame):
         from .start_frame import json_to_image
         from .generate import cartogram
         import numpy as np
+        import os
+        import json
+
+        folder_path = os.path.join("projects", self.project_name)
+
+        with open(folder_path) as project_file:
+            project_json = load(project_file)
+            project_json = list(project_json.items())
+
+            table = self.table.get()
+            for i in range(1, self.rows):
+                key, values = project_json[i - 1]
+                values["name"] = table[i][0]
+                values["weight"] = float(table[i][1])
+
+        json.dump(dict(project_json), open(folder_path, "w"))
 
         folder_path = os.path.join("projects", self.project_name)
 
